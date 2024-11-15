@@ -188,12 +188,12 @@ if __name__ == '__main__':
         
     CV_LinkCrawler = CareerViet_JobsCrawler(
         driver=driver, 
-        file_path="/home/phan/Workspace/job-recommendation-platform/data/CareerViet/CareerViet_links.csv"
+        file_path="/home/phan/Workspace/job-recommendation-platform/data/CareerViet/CareerViet_links_temp.csv"
     )
     results = CV_LinkCrawler.crawl()
     CV_LinkCrawler.writeFile(
         results, 
-        "/home/phan/Workspace/job-recommendation-platform/data/CareerViet/CareerViet_jobs.json"
+        "/home/phan/Workspace/job-recommendation-platform/data/CareerViet/CareerViet_jobs_4.json"
     )
 
     driver.close()
