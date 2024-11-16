@@ -193,7 +193,7 @@ if __name__ == '__main__':
     results = CV_LinkCrawler.crawl()
     CV_LinkCrawler.writeFile(
         results, 
-        "/home/phan/Workspace/job-recommendation-platform/data/CareerViet/CareerViet_jobs_4.json"
+        "/home/phan/Workspace/job-recommendation-platform/data/CareerViet/CareerViet_jobs_6.json"
     )
 
     driver.close()
