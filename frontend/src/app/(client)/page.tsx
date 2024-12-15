@@ -1,9 +1,6 @@
 'use client';
 import { isSessionValid } from '@/lib/auth';
-import RecommendPage from './recommend/RecommendPage';
 import { useRouter } from 'next/navigation';
-import Cookies from 'js-cookie';
-import jwt from 'jsonwebtoken';
 import { useEffect } from 'react';
 
 export default function Home() {
