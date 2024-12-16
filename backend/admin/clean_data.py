@@ -12,10 +12,10 @@ Check list:
 
 cred = firebase_admin.credentials.Certificate("config/firebase-credential.json")
 firebase_admin.initialize_app(cred, {
-  'databaseURL': 'https://grab-bootcamp-default-rtdb.asia-southeast1.firebasedatabase.app',
-  'databaseAuthVariableOverride': {
-    'uid': "de2a70a3-7cd4-46a0-9ae2-d25aad5bcfb0"
-  }
+  'databaseURL': 'https://ds307-project-default-rtdb.asia-southeast1.firebasedatabase.app',
+  # 'databaseAuthVariableOverride': {
+  #   'uid': "de2a70a3-7cd4-46a0-9ae2-d25aad5bcfb0"
+  # }
 })
 
 # Delete all created users

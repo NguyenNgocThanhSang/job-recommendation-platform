@@ -5,6 +5,9 @@
 __pycache__
 db.sqlite3
 media
+backend/config/config.py
+backend/config/firebase-credential.json
+
 
 # Backup files # 
 *.bak 
@@ -100,6 +103,7 @@ celerybeat-schedule.*
 # Environments 
 .env 
 backend/.venv/ 
+backend/venv310
 env/ 
 venv/ 
 ENV/ 
