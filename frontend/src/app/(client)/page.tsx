@@ -13,7 +13,7 @@ export default function Home() {
   }, []);
 
   const url =
-    'https://public.tableau.com/views/bootcamp_17161932669370/JobInsights?:showVizHome=no&:embed=true';
+    'https://app.powerbi.com/reportEmbed?reportId=8ae8e760-1471-495f-a032-dc2e9bfd8ec7&autoAuth=true&ctid=2dff09ac-2b3b-4182-9953-2b548e0d0b39';
   return (
     <div
       style={{
