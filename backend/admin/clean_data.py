@@ -37,7 +37,7 @@ print("Deleted all data except jobs data in database")
 # Delete all files in storage
 BUCKETS_TO_CLEAR = ["users", "cv"]
 storage = firebase_admin.storage
-bucket = storage.bucket("grab-bootcamp.appspot.com")
+bucket = storage.bucket("ds307-project.firebasestorage.app")
 blobs = bucket.list_blobs()
 for blob in blobs:
   print("Deleting file:", blob.name)
