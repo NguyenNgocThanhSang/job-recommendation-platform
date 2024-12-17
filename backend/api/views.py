@@ -9,6 +9,9 @@ from .helpers import AuthHelper, CVHelper, JobHelper, ChatBotHelper
 from .serializers import *
 from .authenticate import FirebaseAuthentication
 
+import logging
+logger = logging.getLogger(__name__)
+
 class SignUpView(APIView):
   '''
   Sign up with email and password
@@ -197,6 +200,7 @@ class UserAvatarView(APIView):
       download_url = UserResourceManager.get_url("avatar.svg", request.user.uid, request.auth)
       return HttpResponseRedirect(download_url)
     except Exception as e:
+      logger.error(f"Error occured: {str(e)}")
       return Response(
         data = {
           "success": False, 

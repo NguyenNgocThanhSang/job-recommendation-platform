@@ -14,5 +14,3 @@ api_urls = [
   path('jobs/', views.JobView.as_view()),
   path('chatbot/', views.ChatBotView.as_view()),
 ]
-
-urlpatterns = api_urls  # Thêm dòng này
