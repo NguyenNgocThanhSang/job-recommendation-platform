@@ -8,7 +8,7 @@ from api.utils import convert_size, generate_avatar
 
 from ai_models.JobChatBot import JobChatBot
 from ai_models.CVParser import CVParser
-# import ai_models.JobRecommender as JobRecommender
+import ai_models.JobRecommender as JobRecommender
 
 from config.config import JOB_PAGE_SIZE
 

@@ -16,7 +16,7 @@ const CvUploader = ({
   uploadedcvName: string;
   uploadedcvSize: string;
   uploadedcvAt: number;
-  cvFile: File[];
+  cvFile: (File & { preview: string })[];
   onUploadingCv: () => void;
   setOpen: (value: boolean) => void;
 }) => {
