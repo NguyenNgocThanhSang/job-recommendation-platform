@@ -1,4 +1,6 @@
 import pandas as pd
+import os
+
 from sentence_transformers import SentenceTransformer
 
 class JobPreprocessor():
@@ -27,10 +29,10 @@ class JobPreprocessor():
         job_df = pd.read_json(jobs_path, encoding="utf-8")
         
         def encodeJobRequirements(job):
-            if job['requirements_language'] != 'en':
-                requirements = job['en_requirements']
-            else:
-                requirements = job['requirements']                
+            # if job['requirements_language'] != 'en':
+            #     requirements = job['en_requirements']
+            # else:
+            requirements = job['requirements']                
             encoded_requirements = self.embedding_model.encode(requirements)
             print('Encoded job {}'.format(job['job_title']))
             return encoded_requirements
@@ -44,8 +46,11 @@ class JobPreprocessor():
 
         
 if __name__ == '__main__':
-    paths = 'JobData/CareerViet_Official.json'
-    encoded_path = 'JobData/encoded_jobs.json'
+    base_dir = os.getcwd()
+    json_path = os.path.abspath(os.path.join(base_dir, "careerviet.json"))
+    paths = json_path
+    json_path = os.path.abspath(os.path.join(base_dir, "encoded_jobs.json"))
+    encoded_path = json_path
     
     job_preprocessor = JobPreprocessor()
     

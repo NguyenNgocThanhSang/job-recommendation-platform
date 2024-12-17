@@ -7,6 +7,7 @@ USER_NAME = f"test{ID}@gmail.com"
 PASSWORD = "test123"
 TOKEN = ""
 
+
 def sign_up(email, password, username):
     url = URL + "signup/"
     headers = {
