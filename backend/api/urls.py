@@ -9,6 +9,7 @@ user_urls = [
 api_urls = [
   path('signup/', views.SignUpView.as_view()),
   path('signin/', views.SignInView.as_view()),
+  # path('jobs_post/', views.PostJobView.as_view()),
   path('forgot-password/', views.ForgotPasswordView.as_view()),
   path('user/', include(user_urls)),
   path('jobs/', views.JobView.as_view()),

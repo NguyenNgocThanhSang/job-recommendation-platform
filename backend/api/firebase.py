@@ -66,7 +66,7 @@ class UserResourceManager:
     Get download url for a file from storage
     '''
     # Get download token
-    r = requests.get(f'https://firebasestorage.googleapis.com/v0/b/{firebase_client.storageBucket}/o/user%2F{user_id}%2F{filename}', 
+    r = requests.get(f'https://firebasestorage.googleapis.com/v0/b/{firebase_client.storage_bucket}/o/user%2F{user_id}%2F{filename}', 
                      headers={'Authorization': f'Bearer {id_token}'})
     if r.status_code == 200:
       download_token = r.json()['downloadTokens']

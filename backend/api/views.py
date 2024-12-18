@@ -1,14 +1,15 @@
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse
+import requests
 from rest_framework.views import APIView
 from rest_framework.response import Response
 import json
-
 from .forms import *
 from .firebase import UserResourceManager
 from .helpers import AuthHelper, CVHelper, JobHelper, ChatBotHelper
 from .serializers import *
 from .authenticate import FirebaseAuthentication
-
+from rest_framework import status
+import os
 class SignUpView(APIView):
   '''
   Sign up with email and password
@@ -186,24 +187,111 @@ class UserCVView(APIView):
     })
   
 class UserAvatarView(APIView):
-  '''
-  Get user's own avatar
-  '''
-  http_method_names = ['get', 'options']
-  authentication_classes = [FirebaseAuthentication]
+    '''
+    Serve user's avatar directly
+    '''
+    http_method_names = ['get', 'options']
+    authentication_classes = [FirebaseAuthentication]
 
-  def get(self, request):
-    try:
-      download_url = UserResourceManager.get_url("avatar.svg", request.user.uid, request.auth)
-      return HttpResponseRedirect(download_url)
-    except Exception as e:
-      return Response(
-        data = {
-          "success": False, 
-          "message": str(e)
-        }, 
-        status=400
-      )
+    def get(self, request):
+        try:
+            # Generate the download URL
+            download_url = UserResourceManager.get_url("avatar.svg", request.user.uid, request.auth)
+
+            # Fetch the file content
+            response = requests.get(download_url)
+            if response.status_code == 200:
+                return HttpResponse(
+                    content=response.content,
+                    content_type=response.headers['Content-Type']
+                )
+            else:
+                return Response(
+                    data={
+                        "success": False,
+                        "message": "Failed to fetch avatar from Firebase."
+                    },
+                    status=response.status_code
+                )
+        except Exception as e:
+            return Response(
+                data={
+                    "success": False,
+                    "message": str(e)
+                },
+                status=400
+            )
+    
+class PostJobView(APIView):
+    '''
+    Post a job to the data/jobs.json file
+    '''
+    http_method_names = ['post', 'options']
+    authentication_classes = [FirebaseAuthentication]
+
+    def post(self, request):
+        try:
+            # Define the file path
+            base_dir = os.getcwd()
+            data_dir = os.path.join(base_dir, "data", "jobs.json")
+            file_path = data_dir
+
+            # Load existing job data
+            if os.path.exists(file_path):
+                with open(file_path, 'r', encoding='utf-8') as file:
+                    try:
+                        jobs = json.load(file)
+                    except json.JSONDecodeError:
+                        jobs = []
+            else:
+                jobs = []
+
+            # Get new job data from the request
+            new_job_data = request.data  # Expect a single job entry
+            print("New job data:", new_job_data)  # Debugging
+
+            # Validate required fields for the new job
+            required_fields = [
+                "job_title", "job_url", "company_name", "company_url", "company_img_url",
+                "location", "post_date", "due_date", "fields", "salary", "experience",
+                "position", "benefits", "job_description", "requirements"
+            ]
+            missing_fields = [field for field in required_fields if field not in new_job_data]
+            if missing_fields:
+                return Response(
+                    data={
+                        "success": False,
+                        "message": f"Missing required fields: {', '.join(missing_fields)}"
+                    },
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            # Append the new job to the list of existing jobs
+            jobs.append(new_job_data)
+
+            # Save the updated job list back to the file
+            with open(file_path, 'w', encoding='utf-8') as f:
+                json.dump(jobs, f, ensure_ascii=False, indent=4)
+
+            return Response(
+                data={
+                    "success": True,
+                    "message": "Job posted successfully!",
+                    "data": jobs
+                },
+                status=status.HTTP_201_CREATED
+            )
+
+        except Exception as e:
+            return Response(
+                data={
+                    "success": False,
+                    "message": str(e)
+                },
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
     
 class JobView(APIView):
   '''

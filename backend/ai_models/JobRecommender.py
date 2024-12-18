@@ -1,5 +1,6 @@
 from sentence_transformers import SentenceTransformer, util
 import pandas as pd
+import os
 
 class JobRecommender():
     def __init__(self) -> None:
@@ -64,8 +65,13 @@ class JobRecommender():
 
 print("Initializing Job Recommender")
 
-job_df = pd.read_json('data/jobs.json', encoding="utf-8")
-field_df = pd.read_json('data/encoded_fields.json', encoding="utf-8") 
+base_dir = os.getcwd()
+job_path = os.path.join(base_dir, "data", "jobs.json")
+
+job_df = pd.read_json(job_path, encoding="utf-8")
+encoded_path = os.path.join(base_dir, "data", "encoded_fields.json")
+print("Job data loaded", job_df.shape)
+field_df = pd.read_json(encoded_path, encoding="utf-8") 
 
 job_recommender = JobRecommender()
 job_recommender.attachJobs(job_df=job_df)
