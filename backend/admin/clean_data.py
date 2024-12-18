@@ -10,11 +10,11 @@ Check list:
 [X] Delete all files in storage
 '''
 
-cred = firebase_admin.credentials.Certificate("config/firebase-credential.json")
+cred = firebase_admin.credentials.Certificate("../config/firebase-credential.json")
 firebase_admin.initialize_app(cred, {
-  'databaseURL': 'https://ds307-project-default-rtdb.asia-southeast1.firebasedatabase.app',
+  'databaseURL': 'https://ds307-jobrecommendation.asia-southeast1.firebasedatabase.app',
   # 'databaseAuthVariableOverride': {
-  #   'uid': "de2a70a3-7cd4-46a0-9ae2-d25aad5bcfb0"
+  #   'uid': "5e28547a-c340-4b0d-bd90-896554f8d580"
   # }
 })
 
@@ -37,7 +37,7 @@ print("Deleted all data except jobs data in database")
 # Delete all files in storage
 BUCKETS_TO_CLEAR = ["users", "cv"]
 storage = firebase_admin.storage
-bucket = storage.bucket("ds307-project.firebasestorage.app")
+bucket = storage.bucket("ds307-jobrecommendation.firebasestorage.app")
 blobs = bucket.list_blobs()
 for blob in blobs:
   print("Deleting file:", blob.name)

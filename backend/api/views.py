@@ -8,8 +8,7 @@ from .firebase import UserResourceManager
 from .helpers import AuthHelper, CVHelper, JobHelper, ChatBotHelper
 from .serializers import *
 from .authenticate import FirebaseAuthentication
-from rest_framework import status
-import os
+
 class SignUpView(APIView):
   '''
   Sign up with email and password
@@ -193,34 +192,18 @@ class UserAvatarView(APIView):
     http_method_names = ['get', 'options']
     authentication_classes = [FirebaseAuthentication]
 
-    def get(self, request):
-        try:
-            # Generate the download URL
-            download_url = UserResourceManager.get_url("avatar.svg", request.user.uid, request.auth)
-
-            # Fetch the file content
-            response = requests.get(download_url)
-            if response.status_code == 200:
-                return HttpResponse(
-                    content=response.content,
-                    content_type=response.headers['Content-Type']
-                )
-            else:
-                return Response(
-                    data={
-                        "success": False,
-                        "message": "Failed to fetch avatar from Firebase."
-                    },
-                    status=response.status_code
-                )
-        except Exception as e:
-            return Response(
-                data={
-                    "success": False,
-                    "message": str(e)
-                },
-                status=400
-            )
+  def get(self, request):
+    try:
+      download_url = UserResourceManager.get_url("avatar.svg", request.user.uid, request.auth)
+      return HttpResponseRedirect(download_url)
+    except Exception as e:
+      return Response(
+        data = {
+          "success": False, 
+          "message": str(e)
+        }, 
+        status=400
+      )
     
 class PostJobView(APIView):
     '''

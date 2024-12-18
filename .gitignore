@@ -7,6 +7,7 @@ db.sqlite3
 media
 backend/config/config.py
 backend/config/firebase-credential.json
+backend/data/*
 
 
 # Backup files # 
