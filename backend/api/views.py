@@ -8,6 +8,7 @@ from .firebase import UserResourceManager
 from .helpers import AuthHelper, CVHelper, JobHelper, ChatBotHelper
 from .serializers import *
 from .authenticate import FirebaseAuthentication
+import os
 
 class SignUpView(APIView):
   '''
@@ -184,6 +185,7 @@ class UserCVView(APIView):
       "message": "File uploaded successfully.",
       "data": CVFileInfoSerializer(file_info).data
     })
+
   
 class UserAvatarView(APIView):
     '''
@@ -192,19 +194,36 @@ class UserAvatarView(APIView):
     http_method_names = ['get', 'options']
     authentication_classes = [FirebaseAuthentication]
 
-  def get(self, request):
-    try:
-      download_url = UserResourceManager.get_url("avatar.svg", request.user.uid, request.auth)
-      return HttpResponseRedirect(download_url)
-    except Exception as e:
-      return Response(
-        data = {
-          "success": False, 
-          "message": str(e)
-        }, 
-        status=400
-      )
+    def get(self, request):
+        try:
+            # Generate the download URL
+            download_url = UserResourceManager.get_url("avatar.svg", request.user.uid, request.auth)
+
+            # Fetch the file content
+            response = requests.get(download_url)
+            if response.status_code == 200:
+                return HttpResponse(
+                    content=response.content,
+                    content_type=response.headers['Content-Type']
+                )
+            else:
+                return Response(
+                    data={
+                        "success": False,
+                        "message": "Failed to fetch avatar from Firebase."
+                    },
+                    status=response.status_code
+                )
+        except Exception as e:
+            return Response(
+                data={
+                    "success": False,
+                    "message": str(e)
+                },
+                status=400
+            )
     
+
 class PostJobView(APIView):
     '''
     Post a job to the data/jobs.json file
@@ -246,7 +265,7 @@ class PostJobView(APIView):
                         "success": False,
                         "message": f"Missing required fields: {', '.join(missing_fields)}"
                     },
-                    status=status.HTTP_400_BAD_REQUEST
+                    status=400
                 )
 
             # Append the new job to the list of existing jobs
@@ -262,7 +281,7 @@ class PostJobView(APIView):
                     "message": "Job posted successfully!",
                     "data": jobs
                 },
-                status=status.HTTP_201_CREATED
+                status=201
             )
 
         except Exception as e:
@@ -271,7 +290,7 @@ class PostJobView(APIView):
                     "success": False,
                     "message": str(e)
                 },
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                status=500
             )
 
 

@@ -8,7 +8,7 @@ media
 backend/config/config.py
 backend/config/firebase-credential.json
 backend/data/*
-
+backend/data/jobs.json
 
 # Backup files # 
 *.bak 
