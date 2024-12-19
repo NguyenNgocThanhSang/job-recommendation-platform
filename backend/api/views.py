@@ -171,6 +171,9 @@ class UserCVView(APIView):
       if 'file' not in request.FILES:
         raise Exception("No file uploaded.")
       cv_file = request.FILES['file']
+      if not cv_file.name.endswith('.pdf'):
+            raise Exception("Invalid file type. Only PDF files are allowed.")
+      
       file_info = CVHelper.upload_and_process_cv(cv_file, request.user.uid, request.auth)
     except Exception as e:
       return Response(

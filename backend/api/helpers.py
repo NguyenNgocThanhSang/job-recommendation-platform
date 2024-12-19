@@ -26,38 +26,59 @@ class CVHelper:
 
   @staticmethod
   def upload_and_process_cv(file, user_id, token):
-    '''
-    Upload CV file to storage and process it
-    return: file_info
-    '''
-    file_name = file.name
-    if not file_name.endswith(".pdf"):
-      raise Exception("Invalid file type. Only PDF files are supported.")
-    if len(file_name) > 40:
-      raise Exception("File name too long.")
+    try:
+        # Validate file type
+        file_name = file.name
+        print(f"Processing file: {file_name}")
+        if not file_name.endswith(".pdf"):
+            raise Exception("Invalid file type. Only PDF files are supported.")
+        if len(file_name) > 40:
+            raise Exception("File name too long.")
 
-    data = file.read()
-    file_size = convert_size(len(data))
-    # Upload file to storage
-    download_url = UserResourceManager.upload_file("cv.pdf", data, user_id, token)
-    if download_url is None:
-      raise Exception("Failed to upload file.")
-    file_info = CVFileInfoSerializer(data={
-      "file_name": file_name,
-      "file_size": file_size,
-      "file_url": download_url,
-      "uploaded_at": int(datetime.now().timestamp())
-    }).create()
-    
-    # Process CV data and save results to database
-    parsed_data = CVParser.parse_cv(data)
-    cv = CVDataSerializer(parsed_data).create()
-    CVManager.create(cv, file_info, user_id)
+        # Read file data
+        data = file.read()
+        file_size = convert_size(len(data))
+        print(f"File size: {file_size}")
 
-    recommended_jobs = JobRecommender.recommend_jobs(cv.__dict__)
-    JobRecommenderDataManager.save_recommendations(user_id, recommended_jobs)
+        # Upload to storage
+        print("Uploading file to storage...")
+        download_url = UserResourceManager.upload_file("cv.pdf", data, user_id, token)
+        if download_url is None:
+            raise Exception("Failed to upload file.")
+        print(f"File uploaded successfully. Download URL: {download_url}")
 
-    return file_info
+        # Create file info metadata
+        file_info = CVFileInfoSerializer(data={
+            "file_name": file_name,
+            "file_size": file_size,
+            "file_url": download_url,
+            "uploaded_at": int(datetime.now().timestamp())
+        }).create()
+        print("File metadata created:", file_info)
+
+        # Parse CV data
+        print("Parsing CV data...")
+        parsed_data = CVParser.parse_cv(data)
+        print("CV parsed successfully.")
+
+        # Save CV data
+        print("Saving CV data to database...")
+        cv = CVDataSerializer(parsed_data).create()
+        CVManager.create(cv, file_info, user_id)
+        print("CV data saved successfully.")
+
+        # Recommend jobs
+        print("Recommending jobs...")
+        print("CV Data passed to JobRecommender:", cv.__dict__)
+        recommended_jobs = JobRecommender.recommend_jobs(cv.__dict__)
+        JobRecommenderDataManager.save_recommendations(user_id, recommended_jobs)
+        print("Job recommendations saved successfully.")
+
+        return file_info
+
+    except Exception as e:
+        print(f"Error in upload_and_process_cv: {str(e)}")
+        raise
 
 class ChatBotHelper:
   @staticmethod
@@ -131,7 +152,7 @@ class AuthHelper:
 
 class JobHelper:
   @staticmethod
-  def get_recommended_jobs(user_id, page = None):
+  def   get_recommended_jobs(user_id, page = None):
     '''
     Get recommended jobs by user_id
     Return: jobs in requested page, total number of jobs
