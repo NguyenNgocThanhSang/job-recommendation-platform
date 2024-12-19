@@ -3,7 +3,7 @@ import os
 # Read the JSON file
 
 base_dir = os.getcwd()
-json_path = os.path.abspath(os.path.join(base_dir, "careerviet.json"))
+json_path = os.path.abspath(os.path.join(base_dir, "CareerViet_Official_Cleaned.json"))
 
 input_file = json_path  # Replace with the actual input file name
 
@@ -17,7 +17,7 @@ with open(input_file, "r", encoding="utf-8") as file:
 output_data = [
     {
         "job_title": job.get("job_title"),
-        "fields": job.get("fields")
+        "fields": job.get("en_fields")
     }
     for job in data
 ]
