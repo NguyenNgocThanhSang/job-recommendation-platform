@@ -50,7 +50,7 @@ class JobPreprocessor():
 
 if __name__ == '__main__':
     base_dir = os.getcwd()
-    json_path = os.path.abspath(os.path.join(base_dir, "jobs.json"))
+    json_path = os.path.abspath(os.path.join(base_dir, "jobs1.json"))
     output_json_path = os.path.abspath(os.path.join(base_dir, "encoded_fields.json"))
     
     # Đọc dữ liệu JSON từ tệp

@@ -7,7 +7,7 @@ json_path = os.path.abspath(os.path.join(base_dir, "CareerViet_Official_Cleaned.
 
 input_file = json_path  # Replace with the actual input file name
 
-json_path_1 = os.path.abspath(os.path.join(base_dir, "jobs.json"))
+json_path_1 = os.path.abspath(os.path.join(base_dir, "jobs1.json"))
 output_file = json_path_1 # Replace with the desired output file name
 
 with open(input_file, "r", encoding="utf-8") as file:
@@ -17,7 +17,7 @@ with open(input_file, "r", encoding="utf-8") as file:
 output_data = [
     {
         "job_title": job.get("job_title"),
-        "fields": job.get("en_fields")
+        "fields": job.get("fields")
     }
     for job in data
 ]

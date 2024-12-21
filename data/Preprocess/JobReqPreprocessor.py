@@ -41,8 +41,8 @@ class JobPreprocessor():
 
         
 if __name__ == '__main__':
-    merged_path = 'CareerViet_Official_Cleaned.json'
-    encoded_path = 'encoded_jobs.json'
+    merged_path = 'CareerViet_Official_Updated.json'
+    encoded_path = 'jobs_req.json'
     
     job_preprocessor = JobPreprocessor()
     

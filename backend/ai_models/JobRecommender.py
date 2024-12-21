@@ -65,7 +65,7 @@ class JobRecommender():
 print("Initializing Job Recommender")
 
 job_df = pd.read_json('data/jobs_req.json', encoding="utf-8")
-field_df = pd.read_json('data/encoded_fields.json', encoding="utf-8") 
+field_df = pd.read_json('data/encoded_fields_1.json', encoding="utf-8") 
 
 job_recommender = JobRecommender()
 job_recommender.attachJobs(job_df=job_df)
@@ -81,6 +81,8 @@ def recommend_jobs(cv_dict):
   try:
     job_recommender.attachCV(cv_dict=cv_dict)
     similarity_job_df = job_recommender.computeJobsSimilarity(sort=True, top_f=2)
+    print("Recommended jobs:", similarity_job_df)
+    print("Recommended jobs:", similarity_job_df['id'].values.tolist())
     return similarity_job_df['id'].values.tolist()
   except Exception as e:
     raise Exception(f"Failed to recommend jobs: {str(e)}")

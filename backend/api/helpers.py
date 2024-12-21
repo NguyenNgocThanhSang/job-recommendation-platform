@@ -72,7 +72,7 @@ class CVHelper:
         print("CV Data passed to JobRecommender:", cv.__dict__)
         recommended_jobs = JobRecommender.recommend_jobs(cv.__dict__)
         JobRecommenderDataManager.save_recommendations(user_id, recommended_jobs)
-        print("Job recommendations saved successfully.")
+        print("Job recommendations saved successfully.", recommended_jobs)
 
         return file_info
 
@@ -152,18 +152,34 @@ class AuthHelper:
 
 class JobHelper:
   @staticmethod
-  def   get_recommended_jobs(user_id, page = None):
-    '''
-    Get recommended jobs by user_id
-    Return: jobs in requested page, total number of jobs
-    '''
-    recommended_job_ids = JobRecommenderDataManager.get_recommendations(user_id)
-    if recommended_job_ids is None:
-      raise Exception("No recommendations found. Please upload your CV first.")
-    total = len(recommended_job_ids)
-    if page is None:
-      return JobManager.get_jobs(recommended_job_ids), total
-    else:
-      start = (page - 1) * JOB_PAGE_SIZE
-      end = page * JOB_PAGE_SIZE
-      return JobManager.get_jobs(recommended_job_ids[start:end]), total
+  # def   get_recommended_jobs(user_id, page = None):
+  #   '''
+  #   Get recommended jobs by user_id
+  #   Return: jobs in requested page, total number of jobs
+  #   '''
+  #   recommended_job_ids = JobRecommenderDataManager.get_recommendations(user_id)
+  #   if recommended_job_ids is None:
+  #     raise Exception("No recommendations found. Please upload your CV first.")
+  #   total = len(recommended_job_ids)
+  #   if page is None:
+  #     return JobManager.get_jobs(recommended_job_ids), total
+  #   else:
+  #     start = (page - 1) * JOB_PAGE_SIZE
+  #     end = page * JOB_PAGE_SIZE
+  #     return JobManager.get_jobs(recommended_job_ids[start:end]), total
+  def get_recommended_jobs(user_id, page=None):
+    try:
+        recommended_job_ids = JobRecommenderDataManager.get_recommendations(user_id)
+        if not recommended_job_ids:
+            raise Exception("No recommendations found for the user.")
+        total = len(recommended_job_ids)
+        if page:
+            start = (page - 1) * JOB_PAGE_SIZE
+            end = page * JOB_PAGE_SIZE
+            jobs = JobManager.get_jobs(recommended_job_ids[start:end])
+        else:
+            jobs = JobManager.get_jobs(recommended_job_ids)
+        return jobs, total
+    except Exception as e:
+        print(f"Error in get_recommended_jobs for user {user_id}: {str(e)}")
+        raise
