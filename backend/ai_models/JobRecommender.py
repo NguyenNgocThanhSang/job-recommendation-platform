@@ -64,7 +64,7 @@ class JobRecommender():
 
 print("Initializing Job Recommender")
 
-job_df = pd.read_json('data/jobs_req.json', encoding="utf-8")
+job_df = pd.read_json('data/jobs_req1.json', encoding="utf-8")
 field_df = pd.read_json('data/encoded_fields_1.json', encoding="utf-8") 
 
 job_recommender = JobRecommender()
